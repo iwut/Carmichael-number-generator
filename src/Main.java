@@ -9,21 +9,17 @@ public class Main {
 	}
 
 	public Main() {
-
-		// System.out.println(fermats(561));
-
 		ArrayList<Integer> carmichaels = new ArrayList<Integer>();
-		for (int i = 0; i < 1000000; i++) {
+		for (int i = 561; i < 1000000; i++) {
 			if (isCarmichael(i)) {
 				carmichaels.add(i);
 				System.out.println(i);
 			}
 		}
-
 	}
 
 	private boolean isPrime(int N) {
-		if (N < 100) {
+		if (N < 10000) {
 			// trial division
 			int sqrt = (int) Math.sqrt(N);
 			for (int i = 2; i < sqrt; i++) {
@@ -49,10 +45,14 @@ public class Main {
 
 	private boolean fermats(int N) {
 
+		Random rnd = new Random();
 		int fermatsMod;
-		for (int a = 2; a < N; a++) {
-			if (gcd(a, N) == 1) {
-				fermatsMod = fermatsCalc(a, N);
+		int rndInt;
+		for (int a = 0; a < (int) Math.sqrt(N); a++) {
+			rndInt = rnd.nextInt(N - 1) + 1;
+			if (gcd(rndInt, N) == 1) {
+
+				fermatsMod = fermatsCalc(rndInt, N);
 				if (fermatsMod != 1) {
 					return false;
 				}
@@ -65,14 +65,10 @@ public class Main {
 	private int fermatsCalc(int a, int N) {
 		BigInteger bigA = new BigInteger("" + a);
 		BigInteger bigN = new BigInteger("" + N);
+		BigInteger bigNminusOne = bigN.subtract(BigInteger.ONE);
 		BigInteger result = BigInteger.ONE;
-		for (int i = 0; i < N - 1; i++) {
-			result = result.multiply(bigA);
-		}
 
-		int mod = Integer.parseInt(result.mod(bigN).toString());
-
-		return mod;
+		return bigA.modPow(bigNminusOne, bigN).intValue();
 	}
 
 	// euclidian algorithm
